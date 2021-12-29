@@ -21,7 +21,7 @@ func (iter *iterImpl[T]) GetNext() T {
 }
 
 func (iter *iterImpl[T]) HasNext() bool {
-	return len(iter.slice) > 0
+	return iter.curIdx < (len(iter.slice) - 1)
 }
 
 func NewIterator[T any](slice []T) Iterator[T] {

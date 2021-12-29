@@ -30,8 +30,9 @@ func TestHasNext(t *testing.T) {
 		slice := []int{1}
 		iter := NewIterator(slice)
 
-		actual := iter.HasNext()
-		assert.True(t, actual)
+		assert.True(t, iter.HasNext())
+		iter.GetNext()
+		assert.False(t, iter.HasNext())
 	})
 }
 
