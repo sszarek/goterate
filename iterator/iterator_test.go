@@ -54,3 +54,48 @@ func TestGetNext(t *testing.T) {
 		assert.Equal(t, 3, iter.GetNext())
 	})
 }
+
+func TestResult(t *testing.T) {
+	t.Run("Empty integer slice", func(t *testing.T) {
+		slice := []int{}
+		iter := NewIterator(slice)
+
+		result := iter.Result()
+		assert.ElementsMatch(t, result, slice)
+	})
+
+	t.Run("Non-empty integer slice", func(t *testing.T) {
+		slice := []int{1, 2, 3, 4}
+		iter := NewIterator(slice)
+
+		result := iter.Result()
+		assert.ElementsMatch(t, result, slice)
+	})
+}
+
+func TestTake(t *testing.T) {
+	t.Run("Empty integer slice", func(t *testing.T) {
+		slice := []int{}
+		iter := NewIterator(slice)
+		result := iter.Take(2).Result()
+
+		assert.ElementsMatch(t, result, []int{})
+	})
+
+	t.Run("4 element integer slice", func(t *testing.T) {
+		slice := []int{1, 2, 3, 4}
+		iter := NewIterator(slice)
+		result := iter.Take(2).Result()
+
+		assert.ElementsMatch(t, result, []int{1, 2})
+	})
+
+	t.Run("4 element integer slice, negative param", func(t *testing.T) {
+		slice := []int{1, 2, 3, 4}
+		iter := NewIterator(slice)
+
+		assert.PanicsWithError(t, "Non-negative integer expected as a parameter, got -2", func() {
+			iter.Take(-2).Result()
+		})
+	})
+}
