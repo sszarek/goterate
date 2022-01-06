@@ -41,17 +41,21 @@ func TestGetNext(t *testing.T) {
 		slice := []int{}
 		iter := NewIterator(slice)
 
-		assert.PanicsWithError(t, "No more elements to iterate throught", func() {
-			iter.GetNext()
-		})
+		err, _ := iter.GetNext()
+
+		assert.Error(t, err, "No more elements to iterate throught")
 	})
 
 	t.Run("Integer slice with 3 elements", func(t *testing.T) {
 		slice := []int{1, 2, 3}
 		iter := NewIterator(slice)
-		assert.Equal(t, 1, iter.GetNext())
-		assert.Equal(t, 2, iter.GetNext())
-		assert.Equal(t, 3, iter.GetNext())
+
+		_, first := iter.GetNext()
+		assert.Equal(t, 1, first)
+		_, second := iter.GetNext()
+		assert.Equal(t, 2, second)
+		_, third := iter.GetNext()
+		assert.Equal(t, 3, third)
 	})
 }
 

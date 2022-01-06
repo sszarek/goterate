@@ -5,7 +5,7 @@ import (
 )
 
 type Iterator[T any] interface {
-	GetNext() T
+	GetNext() (error, T)
 	HasNext() bool
 	Where(predicate func(T) bool) Iterator[T]
 	Take(count int) Iterator[T]
@@ -18,12 +18,17 @@ type iterImpl[T any] struct {
 	slice  []T
 }
 
-func (iter *iterImpl[T]) GetNext() T {
+func (iter *iterImpl[T]) GetNext() (error, T) {
 	iter.curIdx++
+
+	var result T
 	if iter.curIdx >= len(iter.slice) {
-		panic(fmt.Errorf("No more elements to iterate throught"))
+		return fmt.Errorf("No more elements to iterate throught"), result
 	}
-	return iter.slice[iter.curIdx]
+
+	result = iter.slice[iter.curIdx]
+
+	return nil, result
 }
 
 func (iter *iterImpl[T]) HasNext() bool {
