@@ -79,21 +79,27 @@ func TestResult(t *testing.T) {
 }
 
 func TestTake(t *testing.T) {
-	t.Run("Empty integer slice", func(t *testing.T) {
-		slice := []int{}
-		iter := NewIterator(slice)
-		result := iter.Take(2).Result()
+	var testCases = []struct {
+		take     int
+		input    []int
+		expected []int
+	}{
+		{1, []int{}, []int{}},
+		{1, []int{1, 2, 3}, []int{1}},
+		{2, []int{1, 2, 3, 4}, []int{1, 2}},
+		{4, []int{1, 2, 3, 4}, []int{1, 2, 3, 4}},
+	}
 
-		assert.ElementsMatch(t, result, []int{})
-	})
+	for _, tt := range testCases {
+		name := fmt.Sprintf("%v,%v,%v", tt.take, tt.input, tt.expected)
 
-	t.Run("4 element integer slice", func(t *testing.T) {
-		slice := []int{1, 2, 3, 4}
-		iter := NewIterator(slice)
-		result := iter.Take(2).Result()
+		t.Run(name, func(t *testing.T) {
+			iter := NewIterator(tt.input)
+			actual := iter.Take(tt.take).Result()
 
-		assert.ElementsMatch(t, result, []int{1, 2})
-	})
+			assert.ElementsMatch(t, actual, tt.expected)
+		})
+	}
 
 	t.Run("4 element integer slice, negative param", func(t *testing.T) {
 		slice := []int{1, 2, 3, 4}
@@ -114,6 +120,7 @@ func TestSkip(t *testing.T) {
 		{1, []int{}, []int{}},
 		{1, []int{1, 2, 3}, []int{2, 3}},
 		{2, []int{1, 2, 3, 4}, []int{3, 4}},
+		{3, []int{1, 2, 3}, []int{}},
 	}
 
 	for _, tt := range testCases {
