@@ -1,6 +1,7 @@
 package iterator
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -100,6 +101,38 @@ func TestTake(t *testing.T) {
 
 		assert.PanicsWithError(t, "Non-negative integer expected as a parameter, got -2", func() {
 			iter.Take(-2).Result()
+		})
+	})
+}
+
+func TestSkip(t *testing.T) {
+	var testCases = []struct {
+		skip     int
+		input    []int
+		expected []int
+	}{
+		{1, []int{}, []int{}},
+		{1, []int{1, 2, 3}, []int{2, 3}},
+		{2, []int{1, 2, 3, 4}, []int{3, 4}},
+	}
+
+	for _, tt := range testCases {
+		name := fmt.Sprintf("%v,%v,%v", tt.skip, tt.input, tt.expected)
+
+		t.Run(name, func(t *testing.T) {
+			iter := NewIterator(tt.input)
+			actual := iter.Skip(tt.skip).Result()
+
+			assert.ElementsMatch(t, actual, tt.expected)
+		})
+	}
+
+	t.Run("negative param provided", func(t *testing.T) {
+		slice := []int{1, 2, 3, 4}
+		iter := NewIterator(slice)
+
+		assert.PanicsWithError(t, "Non-negative integer expected as a parameter, got -2", func() {
+			iter.Skip(-2).Result()
 		})
 	})
 }

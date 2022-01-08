@@ -53,7 +53,15 @@ func (iter *iterImpl[T]) Take(count int) Iterator[T] {
 }
 
 func (iter *iterImpl[T]) Skip(count int) Iterator[T] {
-	return nil
+	if count < 0 {
+		panic(fmt.Errorf("Non-negative integer expected as a parameter, got %v", count))
+	}
+
+	minEl := count
+	if count > len(iter.slice) {
+		minEl = len(iter.slice)
+	}
+	return NewIterator(iter.slice[minEl:])
 }
 
 func (iter *iterImpl[T]) Result() []T {
