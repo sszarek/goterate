@@ -121,6 +121,7 @@ func TestSkip(t *testing.T) {
 		{1, []int{1, 2, 3}, []int{2, 3}},
 		{2, []int{1, 2, 3, 4}, []int{3, 4}},
 		{3, []int{1, 2, 3}, []int{}},
+		{0, []int{1, 2, 3}, []int{1, 2, 3}},
 	}
 
 	for _, tt := range testCases {
