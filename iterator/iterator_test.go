@@ -144,3 +144,36 @@ func TestSkip(t *testing.T) {
 		})
 	})
 }
+
+func TestWhere(t *testing.T) {
+	var testCases = []struct {
+		predicate func(int) bool
+		input     []int
+		expected  []int
+	}{
+		{func(num int) bool {
+			return num > 0
+		}, []int{-1}, []int{}},
+		{
+			func(num int) bool {
+				return num > 0
+			}, []int{1, 2, 3}, []int{1, 2, 3},
+		},
+		{
+			func(num int) bool {
+				return num < 0
+			}, []int{1, 2, 3}, []int{},
+		},
+	}
+
+	for _, tt := range testCases {
+		name := fmt.Sprintf("%v,%v", tt.input, tt.expected)
+
+		t.Run(name, func(t *testing.T) {
+			iter := NewIterator(tt.input)
+			actual := iter.Where(tt.predicate).Result()
+
+			assert.ElementsMatch(t, actual, tt.expected)
+		})
+	}
+}

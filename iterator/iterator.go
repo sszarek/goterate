@@ -36,7 +36,14 @@ func (iter *iterImpl[T]) HasNext() bool {
 }
 
 func (iter *iterImpl[T]) Where(predicate func(T) bool) Iterator[T] {
-	return nil
+	result := []T{}
+
+	for _, item := range iter.slice {
+		if predicate(item) {
+			result = append(result, item)
+		}
+	}
+	return NewIterator(result)
 }
 
 func (iter *iterImpl[T]) Take(count int) Iterator[T] {
