@@ -10,6 +10,8 @@ type Iterator[T any] interface {
 	Where(predicate func(T) bool) Iterator[T]
 	Take(count int) Iterator[T]
 	Skip(count int) Iterator[T]
+	First() (error, T)
+	Last() (error, T)
 	Result() []T
 }
 
@@ -73,6 +75,28 @@ func (iter *iterImpl[T]) Skip(count int) Iterator[T] {
 
 func (iter *iterImpl[T]) Result() []T {
 	return iter.slice
+}
+
+func (iter *iterImpl[T]) First() (error, T) {
+	var result T
+	if len(iter.slice) == 0 {
+		return fmt.Errorf("Iterator is empty"), result
+	}
+
+	result = iter.slice[0]
+
+	return nil, result
+}
+
+func (iter *iterImpl[T]) Last() (error, T) {
+	var result T
+	if len(iter.slice) == 0 {
+		return fmt.Errorf("Iterator is empty"), result
+	}
+
+	result = iter.slice[len(iter.slice)-1]
+
+	return nil, result
 }
 
 func NewIterator[T any](slice []T) Iterator[T] {

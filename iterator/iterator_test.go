@@ -151,9 +151,10 @@ func TestWhere(t *testing.T) {
 		input     []int
 		expected  []int
 	}{
-		{func(num int) bool {
-			return num > 0
-		}, []int{-1}, []int{}},
+		{
+			func(num int) bool {
+				return num > 0
+			}, []int{-1}, []int{}},
 		{
 			func(num int) bool {
 				return num > 0
@@ -176,4 +177,60 @@ func TestWhere(t *testing.T) {
 			assert.ElementsMatch(t, actual, tt.expected)
 		})
 	}
+}
+
+func TestFirst(t *testing.T) {
+	t.Run("Empty int slice", func(t *testing.T) {
+		input := []int{}
+		iter := NewIterator(input)
+		err, _ := iter.First()
+
+		assert.Error(t, err, "Iterator is empty")
+	})
+
+	t.Run("One element int slice", func(t *testing.T) {
+		input := []int{1}
+		iter := NewIterator(input)
+		err, actual := iter.First()
+
+		assert.Nil(t, err)
+		assert.Equal(t, 1, actual)
+	})
+
+	t.Run("Several elements int slice", func(t *testing.T) {
+		input := []int{1, 2, 3, 4, 5}
+		iter := NewIterator(input)
+		err, actual := iter.First()
+
+		assert.Nil(t, err)
+		assert.Equal(t, 1, actual)
+	})
+}
+
+func TestLast(t *testing.T) {
+	t.Run("Empty int slice", func(t *testing.T) {
+		input := []int{}
+		iter := NewIterator(input)
+		err, _ := iter.Last()
+
+		assert.Error(t, err, "Iterator is empty")
+	})
+
+	t.Run("One element int slice", func(t *testing.T) {
+		input := []int{1}
+		iter := NewIterator(input)
+		err, actual := iter.Last()
+
+		assert.Nil(t, err)
+		assert.Equal(t, 1, actual)
+	})
+
+	t.Run("Several elements int slice", func(t *testing.T) {
+		input := []int{1, 2, 3, 4, 5}
+		iter := NewIterator(input)
+		err, actual := iter.Last()
+
+		assert.Nil(t, err)
+		assert.Equal(t, 5, actual)
+	})
 }
