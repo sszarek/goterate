@@ -5,6 +5,8 @@ import (
 )
 
 type Iterator[T any] interface {
+	Any(predicate func(T) bool) bool
+	All(predicate func(T) bool) bool
 	GetNext() (error, T)
 	HasNext() bool
 	Where(predicate func(T) bool) Iterator[T]
@@ -18,6 +20,32 @@ type Iterator[T any] interface {
 type iterImpl[T any] struct {
 	curIdx int
 	slice  []T
+}
+
+func (iter *iterImpl[T]) All(predicate func(T) bool) bool {
+	for iter.HasNext() {
+		_, element := iter.GetNext()
+
+		result := predicate(element)
+
+		if !result {
+			return false
+		}
+	}
+	return true
+}
+
+func (iter *iterImpl[T]) Any(predicate func(T) bool) bool {
+	for iter.HasNext() {
+		_, element := iter.GetNext()
+
+		result := predicate(element)
+
+		if result {
+			return true
+		}
+	}
+	return false
 }
 
 func (iter *iterImpl[T]) GetNext() (error, T) {

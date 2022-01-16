@@ -7,6 +7,94 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestAny(t *testing.T) {
+	var testCases = []struct {
+		predicate func(int) bool
+		input     []int
+		expected  bool
+	}{
+		{
+			func(num int) bool {
+				return true
+			}, []int{}, false,
+		},
+		{
+			func(num int) bool {
+				return false
+			}, []int{}, false,
+		},
+		{
+			func(num int) bool {
+				return num > 0
+			}, []int{-1}, false},
+		{
+			func(num int) bool {
+				return num > 0
+			}, []int{1, 2, 3}, true,
+		},
+		{
+			func(num int) bool {
+				return num < 2
+			}, []int{1, 2, 3}, true,
+		},
+	}
+
+	for _, tt := range testCases {
+		name := fmt.Sprintf("%v,%v", tt.input, tt.expected)
+
+		t.Run(name, func(t *testing.T) {
+			iter := NewIterator(tt.input)
+			actual := iter.Any(tt.predicate)
+
+			assert.Equal(t, actual, tt.expected)
+		})
+	}
+}
+
+func TestAll(t *testing.T) {
+	var testCases = []struct {
+		predicate func(int) bool
+		input     []int
+		expected  bool
+	}{
+		{
+			func(num int) bool {
+				return true
+			}, []int{}, true,
+		},
+		{
+			func(num int) bool {
+				return false
+			}, []int{}, true,
+		},
+		{
+			func(num int) bool {
+				return num > 0
+			}, []int{-1}, false},
+		{
+			func(num int) bool {
+				return num > 0
+			}, []int{1, 2, 3}, true,
+		},
+		{
+			func(num int) bool {
+				return num < 2
+			}, []int{1, 2, 3}, false,
+		},
+	}
+
+	for _, tt := range testCases {
+		name := fmt.Sprintf("%v,%v", tt.input, tt.expected)
+
+		t.Run(name, func(t *testing.T) {
+			iter := NewIterator(tt.input)
+			actual := iter.All(tt.predicate)
+
+			assert.Equal(t, actual, tt.expected)
+		})
+	}
+}
+
 func TestNewIterator(t *testing.T) {
 	t.Run("Nil slice", func(t *testing.T) {
 		var slice []int
