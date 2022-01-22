@@ -6,12 +6,12 @@ type Iterable[T any] interface {
 }
 
 type sliceIterable[T any] struct {
-	slice  []T
-	curIdx int
+	slice    []T
+	iterator Iterator[T]
 }
 
 func (iterable sliceIterable[T]) GetIterator() Iterator[T] {
-	return NewSliceIterator(iterable.slice)
+	return iterable.iterator.Clone()
 }
 
 func (iterable sliceIterable[T]) Where(predicate func(T) bool) Iterable[T] {
@@ -20,7 +20,8 @@ func (iterable sliceIterable[T]) Where(predicate func(T) bool) Iterable[T] {
 
 func NewSliceIterable[T any](slice []T) Iterable[T] {
 	iterable := sliceIterable[T]{
-		slice: slice,
+		slice:    slice,
+		iterator: NewSliceIterator(slice),
 	}
 
 	return &iterable

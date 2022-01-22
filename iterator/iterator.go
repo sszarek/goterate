@@ -1,12 +1,9 @@
 package iterator
 
-import (
-	"fmt"
-)
-
 type Iterator[T any] interface {
 	GetCurrent() T
 	MoveNext() bool
+	Clone() Iterator[T]
 }
 
 type sliceIterator[T any] struct {
@@ -14,27 +11,27 @@ type sliceIterator[T any] struct {
 	slice  []T
 }
 
-func (iter *sliceIterator[T]) GetNext() (error, T) {
-	iter.curIdx++
-
-	var result T
-	if iter.curIdx >= len(iter.slice) {
-		return fmt.Errorf("No more elements to iterate throught"), result
-	}
-
-	result = iter.slice[iter.curIdx]
-
-	return nil, result
+func (iter *sliceIterator[T]) GetCurrent() T {
+	return iter.slice[iter.curIdx]
 }
 
-func (iter *sliceIterator[T]) HasNext() bool {
-	return iter.curIdx < (len(iter.slice) - 1)
+func (iter *sliceIterator[T]) MoveNext() bool {
+	if len(iter.slice) <= iter.curIdx+1 {
+		return false
+	}
+
+	iter.curIdx += 1
+	return true
+}
+
+func (iter *sliceIterator[T]) Clone() Iterator[T] {
+	return NewSliceIterator(iter.slice)
 }
 
 func NewSliceIterator[T any](slice []T) Iterator[T] {
 	iter := sliceIterator[T]{
 		slice:  slice,
-		curIdx: -1,
+		curIdx: 0,
 	}
 	return &iter
 }

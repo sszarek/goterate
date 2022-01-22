@@ -1,14 +1,17 @@
 package iterator
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestSimplecases(t *testing.T) {
-	var default int
+	var result int
 	iter := &whereIterator[int]{
-		predicate: func(val int) bool {return t > 0},
-		current: default,
-		
+		predicate: func(val int) bool { return val > 0 },
+		current:   result,
 	}
 
-	iter.
+	assert.NotNil(t, iter)
 }
