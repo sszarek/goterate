@@ -12,6 +12,7 @@ type sliceIterator[T any] struct {
 }
 
 func (iter *sliceIterator[T]) GetCurrent() T {
+	// TODO: make sure to handle situation where MoveNext was not called yet
 	return iter.slice[iter.curIdx]
 }
 
@@ -31,7 +32,7 @@ func (iter *sliceIterator[T]) Clone() Iterator[T] {
 func NewSliceIterator[T any](slice []T) Iterator[T] {
 	iter := sliceIterator[T]{
 		slice:  slice,
-		curIdx: 0,
+		curIdx: -1,
 	}
 	return &iter
 }

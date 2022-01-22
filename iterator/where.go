@@ -3,14 +3,13 @@ package iterator
 type whereIterator[T any] struct {
 	predicate     func(T) bool
 	innerIterator Iterator[T]
-	current       T
 }
 
 func (iterator *whereIterator[T]) GetCurrent() T {
-	return iterator.current
+	return iterator.innerIterator.GetCurrent()
 }
 
-func (iterator *whereIterator[T]) HasNext() bool {
+func (iterator *whereIterator[T]) MoveNext() bool {
 	for iterator.innerIterator.MoveNext() {
 		item := iterator.innerIterator.GetCurrent()
 		if iterator.predicate(item) {
@@ -20,9 +19,14 @@ func (iterator *whereIterator[T]) HasNext() bool {
 	return false
 }
 
-func newWhereIterator[T any](innerIterator Iterator[T], predicate func(T) bool) *whereIterator[T] {
+func (iterator *whereIterator[T]) Clone() Iterator[T] {
+	return NewWhereIterator(iterator.innerIterator.Clone(), iterator.predicate)
+}
+
+func NewWhereIterator[T any](innerIterator Iterator[T], predicate func(T) bool) Iterator[T] {
 	iterator := whereIterator[T]{
-		predicate: predicate,
+		predicate:     predicate,
+		innerIterator: innerIterator,
 	}
 
 	return &iterator

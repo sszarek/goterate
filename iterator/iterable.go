@@ -15,7 +15,12 @@ func (iterable sliceIterable[T]) GetIterator() Iterator[T] {
 }
 
 func (iterable sliceIterable[T]) Where(predicate func(T) bool) Iterable[T] {
-	return nil
+	whereIterator := NewWhereIterator(iterable.iterator, predicate)
+
+	iterable.iterator = whereIterator
+
+	// TODO: Change this to return new iterable
+	return iterable
 }
 
 func NewSliceIterable[T any](slice []T) Iterable[T] {
