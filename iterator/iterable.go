@@ -10,17 +10,19 @@ type sliceIterable[T any] struct {
 	iterator Iterator[T]
 }
 
-func (iterable sliceIterable[T]) GetIterator() Iterator[T] {
+func (iterable *sliceIterable[T]) GetIterator() Iterator[T] {
 	return iterable.iterator.Clone()
 }
 
-func (iterable sliceIterable[T]) Where(predicate func(T) bool) Iterable[T] {
+func (iterable *sliceIterable[T]) Where(predicate func(T) bool) Iterable[T] {
 	whereIterator := NewWhereIterator(iterable.iterator, predicate)
 
-	iterable.iterator = whereIterator
+	newIterable := &sliceIterable[T]{
+		slice:    iterable.slice,
+		iterator: whereIterator,
+	}
 
-	// TODO: Change this to return new iterable
-	return iterable
+	return newIterable
 }
 
 func NewSliceIterable[T any](slice []T) Iterable[T] {
