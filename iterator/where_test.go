@@ -34,6 +34,15 @@ func TestIteration(t *testing.T) {
 		assert.Equal(t, 3, iterator.GetCurrent())
 	})
 
+	t.Run("Empty slice - predicate: > 0", func(t *testing.T) {
+		slice := []int{}
+
+		iterable := NewSliceIterable(slice).Where(func(t int) bool { return t > 0 })
+		iterator := iterable.GetIterator()
+
+		assert.False(t, iterator.MoveNext())
+	})
+
 	t.Run("[1,2,3] - predicate: > 0", func(t *testing.T) {
 		slice := []int{1, 2, 3}
 
