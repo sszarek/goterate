@@ -1,3 +1,6 @@
+![Master](https://github.com/sszarek/goterate/actions/workflows/go.yaml/badge.svg)
+[![codecov](https://codecov.io/gh/sszarek/goterate/branch/master/graph/badge.svg?token=7VUBJK8QOX)](https://codecov.io/gh/sszarek/goterate)
+
 # Goterate
 An naive attempt to implement LINQ like experience of working with collections (arrays, slices and maps) in Go using generics.
 
