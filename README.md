@@ -4,6 +4,10 @@
 # Goterate
 An naive attempt to implement LINQ like experience of working with collections (arrays, slices and maps) in Go using generics.
 
+## Implemented methods
+- `Filter`
+- `Take`
+
 # Examples
 
 ## Iterate over slice
@@ -24,11 +28,11 @@ The above statement will produce following output:
 3
 ``` 
 
-## Filter slice using `Where` method
+## Filter slice
 ```go
 slice := []int{-1,-2, -3, 1, 2, 3}
 
-iterable := NewSliceIterable(slice).Where(func(t int) bool { return t > 0 })
+iterable := NewSliceIterable(slice).Filter(func(t int) bool { return t > 0 })
 iterator := iterable.GetIterator()
 
 for iterator.MoveNext() {
