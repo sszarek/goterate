@@ -17,24 +17,12 @@ func (iterable *sliceIterable[T]) GetIterator() Iterator[T] {
 
 func (iterable *sliceIterable[T]) Filter(predicate func(T) bool) Iterable[T] {
 	filterIterator := NewFilterIterator(iterable.iterator, predicate)
-
-	newIterable := &sliceIterable[T]{
-		slice:    iterable.slice,
-		iterator: filterIterator,
-	}
-
-	return newIterable
+	return iterable.newFromIterator(filterIterator)
 }
 
 func (iterable *sliceIterable[T]) Take(take int) Iterable[T] {
 	takeIterator := NewTakeIterator(iterable.iterator, take)
-
-	newIterable := &sliceIterable[T]{
-		slice:    iterable.slice,
-		iterator: takeIterator,
-	}
-
-	return newIterable
+	return iterable.newFromIterator(takeIterator)
 }
 
 func NewSliceIterable[T any](slice []T) Iterable[T] {
@@ -44,4 +32,13 @@ func NewSliceIterable[T any](slice []T) Iterable[T] {
 	}
 
 	return &iterable
+}
+
+func (iterable *sliceIterable[T]) newFromIterator(iterator Iterator[T]) Iterable[T] {
+	newIterable := &sliceIterable[T]{
+		slice:    iterable.slice,
+		iterator: iterator,
+	}
+
+	return newIterable
 }
