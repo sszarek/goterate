@@ -1,7 +1,7 @@
 package iterator
 
 type Iterable[T any] interface {
-	Where(predicate func(T) bool) Iterable[T]
+	Filter(predicate func(T) bool) Iterable[T]
 	Take(take int) Iterable[T]
 	GetIterator() Iterator[T]
 }
@@ -15,12 +15,12 @@ func (iterable *sliceIterable[T]) GetIterator() Iterator[T] {
 	return iterable.iterator.Clone()
 }
 
-func (iterable *sliceIterable[T]) Where(predicate func(T) bool) Iterable[T] {
-	whereIterator := NewWhereIterator(iterable.iterator, predicate)
+func (iterable *sliceIterable[T]) Filter(predicate func(T) bool) Iterable[T] {
+	filterIterator := NewFilterIterator(iterable.iterator, predicate)
 
 	newIterable := &sliceIterable[T]{
 		slice:    iterable.slice,
-		iterator: whereIterator,
+		iterator: filterIterator,
 	}
 
 	return newIterable
