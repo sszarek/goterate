@@ -6,37 +6,34 @@ type Iterable[T any] interface {
 	GetIterator() Iterator[T]
 }
 
-type sliceIterable[T any] struct {
-	slice    []T
+type iterableImpl[T any] struct {
 	iterator Iterator[T]
 }
 
-func (iterable *sliceIterable[T]) GetIterator() Iterator[T] {
+func (iterable *iterableImpl[T]) GetIterator() Iterator[T] {
 	return iterable.iterator.Clone()
 }
 
-func (iterable *sliceIterable[T]) Filter(predicate func(T) bool) Iterable[T] {
+func (iterable *iterableImpl[T]) Filter(predicate func(T) bool) Iterable[T] {
 	filterIterator := NewFilterIterator(iterable.iterator, predicate)
 	return iterable.newFromIterator(filterIterator)
 }
 
-func (iterable *sliceIterable[T]) Take(take int) Iterable[T] {
+func (iterable *iterableImpl[T]) Take(take int) Iterable[T] {
 	takeIterator := NewTakeIterator(iterable.iterator, take)
 	return iterable.newFromIterator(takeIterator)
 }
 
 func NewSliceIterable[T any](slice []T) Iterable[T] {
-	iterable := sliceIterable[T]{
-		slice:    slice,
+	iterable := iterableImpl[T]{
 		iterator: NewSliceIterator(slice),
 	}
 
 	return &iterable
 }
 
-func (iterable *sliceIterable[T]) newFromIterator(iterator Iterator[T]) Iterable[T] {
-	newIterable := &sliceIterable[T]{
-		slice:    iterable.slice,
+func (iterable *iterableImpl[T]) newFromIterator(iterator Iterator[T]) Iterable[T] {
+	newIterable := &iterableImpl[T]{
 		iterator: iterator,
 	}
 
