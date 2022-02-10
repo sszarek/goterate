@@ -7,44 +7,36 @@ import (
 )
 
 func TestGetCurrent(t *testing.T) {
-	t.Run("Returns new iterable", func(t *testing.T) {
-		slice := []int{1, 2, 3}
-		iterable := NewSliceIterable(slice)
-		takeIterable := iterable.Take(1)
-
-		assert.NotSame(t, iterable, takeIterable)
-	})
-
 	t.Run("Empty slice - take 1", func(t *testing.T) {
 		slice := []int{}
-		iterable := NewSliceIterable(slice).Take(1)
-		iterator := iterable.GetIterator()
+		sliceIterator := NewSliceIterator(slice)
+		takeIterator := NewTakeIterator(sliceIterator, 1)
 
-		assert.False(t, iterator.MoveNext())
+		assert.False(t, takeIterator.MoveNext())
 	})
 
 	t.Run("[1,2,3] - take 1", func(t *testing.T) {
 		slice := []int{1, 2, 3}
-		iterable := NewSliceIterable(slice).Take(1)
-		iterator := iterable.GetIterator()
+		sliceIterator := NewSliceIterator(slice)
+		takeIterator := NewTakeIterator(sliceIterator, 1)
 
-		assert.True(t, iterator.MoveNext())
-		assert.Equal(t, 1, iterator.GetCurrent())
+		assert.True(t, takeIterator.MoveNext())
+		assert.Equal(t, 1, takeIterator.GetCurrent())
 
-		assert.False(t, iterator.MoveNext())
+		assert.False(t, takeIterator.MoveNext())
 	})
 
 	t.Run("[1,2,3] - take 2", func(t *testing.T) {
 		slice := []int{1, 2, 3}
-		iterable := NewSliceIterable(slice).Take(2)
-		iterator := iterable.GetIterator()
+		sliceIterator := NewSliceIterator(slice)
+		takeIterator := NewTakeIterator(sliceIterator, 2)
 
-		assert.True(t, iterator.MoveNext())
-		assert.Equal(t, 1, iterator.GetCurrent())
+		assert.True(t, takeIterator.MoveNext())
+		assert.Equal(t, 1, takeIterator.GetCurrent())
 
-		assert.True(t, iterator.MoveNext())
-		assert.Equal(t, 2, iterator.GetCurrent())
+		assert.True(t, takeIterator.MoveNext())
+		assert.Equal(t, 2, takeIterator.GetCurrent())
 
-		assert.False(t, iterator.MoveNext())
+		assert.False(t, takeIterator.MoveNext())
 	})
 }
