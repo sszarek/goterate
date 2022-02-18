@@ -7,22 +7,6 @@ import (
 )
 
 func TestIteration(t *testing.T) {
-	t.Run("Original iterable not modified", func(t *testing.T) {
-		slice := []int{-1, 2, 3}
-
-		sliceIter := NewSliceIterator(slice)
-		filterIterator := NewFilterIterator(sliceIter, func(t int) bool { return t > 0 })
-
-		filterIterator.MoveNext()
-		assert.Equal(t, -1, filterIterator.GetCurrent())
-
-		filterIterator.MoveNext()
-		assert.Equal(t, 2, filterIterator.GetCurrent())
-
-		filterIterator.MoveNext()
-		assert.Equal(t, 3, filterIterator.GetCurrent())
-	})
-
 	t.Run("Empty slice - predicate: > 0", func(t *testing.T) {
 		slice := []int{}
 
