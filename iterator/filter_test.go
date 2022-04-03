@@ -7,6 +7,27 @@ import (
 )
 
 func TestIteration(t *testing.T) {
+	t.Run("Nil inner iterator", func(t *testing.T) {
+		sliceIter := Iterator[int](nil)
+		predicate := func(t int) bool { return t > 0 }
+
+		act := func() {
+			NewFilterIterator(sliceIter, predicate)
+		}
+
+		assert.Panics(t, act, "Expected 'innerIter' to be Iterator but received 'nil'")
+	})
+
+	t.Run("Nil filter", func(t *testing.T) {
+		slice := []int{1, 2, 3}
+		sliceIter := NewSliceIterator(slice)
+		act := func() {
+			NewFilterIterator(sliceIter, nil)
+		}
+
+		assert.Panics(t, act, "Expected 'predicate' to be func but received 'nil'")
+	})
+
 	t.Run("Empty slice - predicate: > 0", func(t *testing.T) {
 		slice := []int{}
 

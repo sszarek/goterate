@@ -1,5 +1,7 @@
 package iterator
 
+import "fmt"
+
 const startSkipValue = 0
 
 type skipIterator[T any] struct {
@@ -36,6 +38,16 @@ func (iter *skipIterator[T]) Clone() Iterator[T] {
 }
 
 func NewSkipIterator[T any](innerIterator Iterator[T], skip int) Iterator[T] {
+	if innerIterator == nil {
+		panicMessage := "Expected 'innerIter' to be Iterator but received 'nil'"
+		panic(panicMessage)
+	}
+
+	if skip < 0 {
+		panicMessage := fmt.Sprintf("Expected 'slice' to be non-negative number but received: %d", skip)
+		panic(panicMessage)
+	}
+
 	iterator := &skipIterator[T]{
 		innerIterator: innerIterator,
 		skip:          skip,

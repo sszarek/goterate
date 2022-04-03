@@ -24,6 +24,16 @@ func (iterator *filterIterator[T]) Clone() Iterator[T] {
 }
 
 func NewFilterIterator[T any](innerIterator Iterator[T], predicate func(T) bool) Iterator[T] {
+	if innerIterator == nil {
+		panicMessage := "Expected 'innerIter' to be Iterator but received 'nil'"
+		panic(panicMessage)
+	}
+
+	if predicate == nil {
+		panicMessage := "Expected 'predicate' to be func but received 'nil'"
+		panic(panicMessage)
+	}
+
 	iterator := filterIterator[T]{
 		predicate:     predicate,
 		innerIterator: innerIterator,

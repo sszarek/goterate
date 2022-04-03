@@ -48,12 +48,35 @@ func TestSKipIteration(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(fmt.Sprintf("slice: %v, skip: %v, actual: %v", tc.slice, tc.skip, tc.expected), func(t *testing.T) {
 			sliceIterator := NewSliceIterator(tc.slice)
-			takeIterator := NewSkipIterator(sliceIterator, tc.skip)
+			skipIterator := NewSkipIterator(sliceIterator, tc.skip)
 
-			actual := iterateToEnd(takeIterator)
+			actual := iterateToEnd(skipIterator)
 			assert.EqualValues(t, tc.expected, actual)
 		})
 	}
+
+	t.Run("Nil inner iterator", func(t *testing.T) {
+		sliceIter := Iterator[int](nil)
+		skip := 1
+
+		act := func() {
+			NewSkipIterator(sliceIter, skip)
+		}
+
+		assert.Panics(t, act, "Expected 'innerIter' to be Iterator but received 'nil'")
+
+	})
+
+	t.Run("Negative skip parameter", func(t *testing.T) {
+		slice := []int{1, 2, 3}
+		sliceIterator := NewSliceIterator(slice)
+
+		act := func() {
+			NewSkipIterator(sliceIterator, -1)
+		}
+
+		assert.Panics(t, act, "Expected 'slice' to be non-negative number but received: -1")
+	})
 }
 
 func iterateToEnd[T any](iter Iterator[T]) []T {
