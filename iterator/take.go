@@ -1,5 +1,7 @@
 package iterator
 
+import "fmt"
+
 type takeIterator[T any] struct {
 	innerIterator Iterator[T]
 	take          int
@@ -24,6 +26,16 @@ func (iterator *takeIterator[T]) Clone() Iterator[T] {
 }
 
 func NewTakeIterator[T any](innerIterator Iterator[T], take int) Iterator[T] {
+	if innerIterator == nil {
+		panicMsg := "Expected 'innerIter' to be Iterator but received 'nil'"
+		panic(panicMsg)
+	}
+
+	if take < 0 {
+		panicMsg := fmt.Sprintf("Expected 'take' to be non-negative number but received: %d", take)
+		panic(panicMsg)
+	}
+
 	iterator := takeIterator[T]{
 		innerIterator: innerIterator,
 		take:          take,

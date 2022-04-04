@@ -40,3 +40,28 @@ func TestGetCurrent(t *testing.T) {
 		assert.False(t, takeIterator.MoveNext())
 	})
 }
+
+func TestNewTakeIterator(t *testing.T) {
+	t.Run("Nil inner iterator", func(t *testing.T) {
+		innerIter := Iterator[int](nil)
+		take := 2
+
+		act := func() {
+			NewTakeIterator(innerIter, take)
+		}
+
+		assert.Panics(t, act, "Expected 'innerIter' to be Iterator but received 'nil'")
+	})
+
+	t.Run("Negative take parameter", func(t *testing.T) {
+		slice := []int{1, 2, 3}
+		iter := NewSliceIterator(slice)
+		take := -1
+
+		act := func() {
+			NewTakeIterator(iter, take)
+		}
+
+		assert.Panics(t, act, "Expected 'slice' to be non-negative number but received: -1")
+	})
+}

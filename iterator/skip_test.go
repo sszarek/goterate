@@ -7,7 +7,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestSKipIteration(t *testing.T) {
+func TestSkipIteration(t *testing.T) {
 	testCases := []struct {
 		slice    []int
 		skip     int
@@ -54,7 +54,9 @@ func TestSKipIteration(t *testing.T) {
 			assert.EqualValues(t, tc.expected, actual)
 		})
 	}
+}
 
+func TestNewSkipIterator(t *testing.T) {
 	t.Run("Nil inner iterator", func(t *testing.T) {
 		sliceIter := Iterator[int](nil)
 		skip := 1
